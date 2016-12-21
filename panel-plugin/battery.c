@@ -600,6 +600,8 @@ battmon.c:241: for each function it appears in.)
     }
 
 #if GTK_CHECK_VERSION (3, 16, 0)
+    gchar *color_str = gdk_rgba_to_string (color);
+
 #if GTK_CHECK_VERSION (3, 20, 0)
     gchar *css = g_strdup_printf("progressbar trough { min-width: 4px; min-height: 4px; } \
                                   progressbar progress { min-width: 4px; min-height: 4px; \
@@ -607,7 +609,8 @@ battmon.c:241: for each function it appears in.)
 #else
     gchar *css = g_strdup_printf("progressbar progress { background-color: %s; background-image: none; }",
 #endif
-                                 gdk_rgba_to_string(color));
+                                  color_str);
+
     GtkCssProvider *css_provider = gtk_css_provider_new ();
     gtk_css_provider_load_from_data (css_provider, css, strlen(css), NULL);
     gtk_style_context_add_provider (
@@ -615,6 +618,7 @@ battmon.c:241: for each function it appears in.)
         GTK_STYLE_PROVIDER (css_provider),
         GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     g_free(css);
+    g_free(color_str);
 #else
     gtk_widget_override_background_color (GTK_WIDGET (battmon->battstatus), GTK_STATE_FLAG_NORMAL, color);
 #endif
@@ -994,7 +998,7 @@ static void refresh_dialog(t_battmon_dialog *dialog)
 
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialog->sb_low_percentage), battmon->options.low_percentage);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(dialog->sb_critical_percentage), battmon->options.critical_percentage);
-    gtk_color_button_new_with_rgba(&battmon->options.colorA);
+
     gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(dialog->ac_color_button), &battmon->options.colorA);
     gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(dialog->high_color_button), &battmon->options.colorH);
     gtk_color_chooser_set_rgba(GTK_COLOR_CHOOSER(dialog->low_color_button), &battmon->options.colorL);
@@ -1615,4 +1619,3 @@ battmon_construct (XfcePanelPlugin *plugin)
 
 /* register the plugin */
 XFCE_PANEL_PLUGIN_REGISTER (battmon_construct);
-
