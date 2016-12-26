@@ -599,9 +599,6 @@ battmon.c:241: for each function it appears in.)
       }
     }
 
-#if GTK_CHECK_VERSION (3, 16, 0)
-    gchar *color_str = gdk_rgba_to_string (color);
-
 #if GTK_CHECK_VERSION (3, 20, 0)
     gchar *css = g_strdup_printf("progressbar trough { min-width: 4px; min-height: 4px; } \
                                   progressbar progress { min-width: 4px; min-height: 4px; \
@@ -619,9 +616,6 @@ battmon.c:241: for each function it appears in.)
         GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     g_free(css);
     g_free(color_str);
-#else
-    gtk_widget_override_background_color (GTK_WIDGET (battmon->battstatus), GTK_STATE_FLAG_NORMAL, color);
-#endif
 
     /* alarms */
     if (!acline && charge <= battmon->options.low_percentage){
